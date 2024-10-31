@@ -8,17 +8,18 @@
 
 /* Body */
 body {
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #00873E;
+  color: black;
   line-height: 1.6;
   padding: 0 1rem;
+  margin-top: 0.5rem;
 }
 
 /* Header Section */
 #header {
   text-align: center;
   padding: 2rem 0;
-  background-color: #d9534f;
+  background-color: #D6001C;
   color: white;
 }
 
@@ -41,8 +42,8 @@ body {
 }
 
 .step {
-  background-color: #5bc0de;
-  color: white;
+  background-color: #0BD6A8;
+  color: black;
   padding: 1rem;
   border-radius: 5px;
   width: 200px;
@@ -66,7 +67,7 @@ body {
 /* Rules Section */
 #rules {
   padding: 2rem 0;
-  background-color: #f1f1f1;
+  background-color: #0BD6A8;
   text-align: center;
 }
 
