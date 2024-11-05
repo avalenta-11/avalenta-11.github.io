@@ -1,0 +1,64 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styles */
+body {
+  background-image: url('bg3.png');
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Main Container */
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+/* Top and Bottom Info */
+.top-info, .bottom-info {
+  margin: 20px 0;
+  font-size: 1.2em;
+  color: #e0e0e0;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.empty {
+  height:400px;
+  width: 100%;
+}
+
+/* Festive Decorations */
+.festive-border {
+  border: 4px solid #ffcc00;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 8px;
+  background-color: rgba(34, 34, 34, 0.9);
+}
+
+/* Footer Styles */
+footer {
+  margin-top: 20px;
+  padding: 10px;
+  color: #ddd;
+  font-size: 0.9em;
+  text-align: center;
+}
