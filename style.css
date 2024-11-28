@@ -82,6 +82,28 @@ img {
     color: white;
 }
 
+/* FOOTER */
+
+.footer {
+    background-color: #15151e;
+    width: 100%;
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a {
+    color: #e10600; /* This is a contrast color for links */
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
 
 /* !!!!!!!!!!! */
 /* INDEX PAGE */
