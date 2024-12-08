@@ -129,12 +129,35 @@ img {
 }
 
 .news-item img {
-    width: 40%; /* Full width of the container */
+    width: 40%; 
     height: auto; /* Maintain aspect ratio */
 }
 
 p.date {
     font-size: 18px;
+}
+
+.videos {
+    padding: 0.5vh;
+    background-color: #f9f9f9;
+    width: 90%;
+    margin: auto; /*align center*/
+    text-align: center; /* align contents */
+    margin-bottom: 5vh;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.videos iframe {
+    aspect-ratio: 16 / 9; /* iframe elements rely on explicitly set dimensions, unlike images - need to set aspect ratio manually for responisveness */
+    width: 80%;
+    max-width: 900px;
+    height: auto;
+    padding: 0.5vh;
+    gap: 15px;
+    margin: 1vh;
+    border-bottom: 3px solid #ddd;
+    padding-bottom: 2vh;
+    margin: 0 auto;
+    display: inline-block;
 }
 
 /* !!!!!!!!!!! */
@@ -181,7 +204,7 @@ p.date {
     justify-content: center; 
     gap: 20px; 
     padding: 20px; 
-    width: 80%;
+    width: 90%;
     margin: 0 auto; /* center container */
   }
   
