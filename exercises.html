@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+    <head>
+        <title>Our Funky HTML Page</title>
+        <script src="exercises.js"></script>
+
+        <meta name="description" content="Our first page">
+        <meta name="keywords" content="html tutorial template">
+        <style>
+            div {
+                width: 50%; /* Adjust width as needed */
+                margin: auto;
+                text-align: center;
+            }
+            .result {
+                margin: 20px auto;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div>
+
+            <label for="rus">Enter the word in Russian:</label>
+            <input type="text" id="rus" name="rus"><br><br>
+
+            <label for="eng">Enter the word in English:</label>
+            <input type="text" id="eng" name="eng"><br><br>
+
+            <input type="button" id="submit" value="Add" onClick="addWords()">
+            <input type="button" id="submit" value="Delete Last" onClick="deleteLastWord()">
+
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div>
+            <input type="button" id="generate" value="Generate and Download HTML" onClick="generateHTML()">
+        </div>
+
+    </body>
+
+</html>
