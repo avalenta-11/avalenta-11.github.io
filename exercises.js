@@ -198,4 +198,9 @@ function generateHTML() {
 
     // Clean up the URL object
     URL.revokeObjectURL(link.href);
+
+    words_rus = [];
+    words_eng = [];
+    result = "";
+    document.getElementById("result").innerHTML = result;
 }
