@@ -57,132 +57,158 @@ function generateHTML() {
 
     //${words_rus}
     const html = `
-    <!doctype html>
-<html>
+        <!doctype html>
+        <html lang="en">
 
-    <head>
-        <title>Our Funky HTML Page</title>
-        
-        <meta name="description" content="Our first page">
-        <meta name="keywords" content="html tutorial template">
-        <style>
-            div {
-                width: 50%; /* Adjust width as needed */
-                margin: auto;
-                text-align: center;
-            }
-            .result {
-                margin: 20px auto;
-            }
-        </style>
-    </head>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Our Funky HTML Page</title>
+            <meta name="description" content="Our first page">
+            <meta name="keywords" content="html tutorial template">
+            <style>
+                body {
+                    background: #0EE2CA;
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
 
-    <body>
+                .text {
+                    text-align: center;
+                    padding: 20px;
+                    font-size: 1.5em;
+                }
 
-        <div>
+                .buttons {
+                    display: flex;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                }
 
-            <input type="button" id="submit" value="Next" onClick="nextCard()">
-            <input type="button" id="submit" value="Delete" onClick="deleteCard()">
+                .buttons input {
+                    padding: 10px 20px;
+                    font-size: 1em;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    background-color: #005f73;
+                    color: white;
+                }
 
-        </div>
+                .buttons input:hover {
+                    background-color: #008000;
+                }
 
-        <div class="cards" id="cards"></div>
+                .cards {
+                    margin: 0 auto;
+                    font-size: 2em;
+                    background: #FFF;
+                    max-width: 90%;
+                    width: 50%;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
 
-    </body>
+                @media (max-width: 600px) {
+                    .text {
+                        font-size: 1.2em;
+                    }
 
-    <script>
-                // JavaScript code
+                    .cards {
+                        font-size: 1em;
+                        width: 90%;
+                        padding: 15px;
+                    }
 
-        // Separate arrays for the first and second words/phrases
-        const firstWords = [${words_rus}];
-        const secondWords = [${words_eng}];
+                    .buttons input {
+                        font-size: 0.9em;
+                        padding: 8px 16px;
+                    }
+                }
+            </style>
+        </head>
 
-        // Variables to track current pair and toggle state
-        let currentIndex = 0;
-        let toggle = 0; // 0 for the first word/phrase, 1 for both words/phrases
+        <body>
 
-        function shuffleArray(array1, array2) {
-            for (let i = array1.length - 1; i > 0; i--) {
-                // Generate a random index between 0 and i
-                const j = Math.floor(Math.random() * (i + 1));
-                // Swap elements at indices i and j
-                [array1[i], array1[j]] = [array1[j], array1[i]];
-                [array2[i], array2[j]] = [array2[j], array2[i]];
-            }
-            return array1, array2;
-        }
+            <div class="text">
+                <p><strong>Dictation</strong></p>
+                <p>Translate from Russian into English.</p>
+            </div>
 
-        shuffleArray(firstWords, secondWords);
+            <div class="buttons">
+                <input type="button" id="next" value="Next" onClick="nextCard()">
+                <input type="button" id="delete" value="Delete" onClick="deleteCard()">
+            </div>
 
-        // Function to display the next card
-        function nextCard() {
+            <div class="cards">
+                <p id="cards"></p>
+            </div>
 
-            // Get the element to display the text
-            const cardElement = document.getElementById("cards");
+            <div class="buttons">
+                <input type="button" onclick="history.back()" value="Go Back">
+            </div>
 
-            if (firstWords.length === 0) {
-                cardElement.textContent = "No pairs left!";
-            }
-            else {
-                // Display the current word/phrase based on toggle state
-                if (toggle === 0) {
-                    cardElement.textContent = firstWords[currentIndex]; // Show first word/phrase
-                } else {
-                    cardElement.textContent = firstWords[currentIndex] + " - " + secondWords[currentIndex]; // Show both words/phrases
-            }
+            <script>
+                // JavaScript code remains the same
+                const firstWords = [${words_rus}];
+                const secondWords = [${words_eng}];
+                let currentIndex = 0;
+                let toggle = 0;
 
-            // Toggle between 0 and 1
-            toggle = 1 - toggle;
+                function shuffleArray(array1, array2) {
+                    for (let i = array1.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [array1[i], array1[j]] = [array1[j], array1[i]];
+                        [array2[i], array2[j]] = [array2[j], array2[i]];
+                    }
+                }
 
-            // If we just finished showing both words/phrases, move to the next pair
-            if (toggle === 0) {
-                currentIndex = (currentIndex + 1) % firstWords.length; // Loop back to the first pair when done
-            }
-            }
+                shuffleArray(firstWords, secondWords);
 
-        }
+                function nextCard() {
+                    const cardElement = document.getElementById("cards");
+                    if (firstWords.length === 0) {
+                        cardElement.textContent = "No pairs left!";
+                        return;
+                    }
 
-        // Function to delete the current pair
-        function deleteCard() {
-            if (firstWords.length === 0) {
-                alert("No more pairs to delete!");
-                return;
-            }
+                    if (toggle === 0) {
+                        cardElement.textContent = firstWords[currentIndex];
+                    } else {
+                        cardElement.textContent = firstWords[currentIndex] + " - " + secondWords[currentIndex];
+                        currentIndex = (currentIndex + 1) % firstWords.length;
+                    }
+                    toggle = 1 - toggle;
+                }
 
-            if (toggle === 0) {
-                // Remove the current pair from both arrays
-                firstWords.splice((currentIndex-1), 1);
-                secondWords.splice((currentIndex-1), 1);
-            }
-            else {
-                // Remove the current pair from both arrays
-                firstWords.splice(currentIndex, 1);
-                secondWords.splice(currentIndex, 1);
-            }
+                function deleteCard() {
+                    if (firstWords.length === 0) {
+                        alert("No more pairs to delete!");
+                        return;
+                    }
 
-            
+                    firstWords.splice(currentIndex, 1);
+                    secondWords.splice(currentIndex, 1);
 
-            // Adjust the index to stay at the current valid position
-            if (currentIndex >= firstWords.length && firstWords.length > 0) {
-                currentIndex = 0; // Reset to the first pair if we delete the last pair
-            }
+                    if (currentIndex >= firstWords.length) {
+                        currentIndex = 0;
+                    }
 
-            // Clear the displayed text
-            const cardElement = document.getElementById("cards");
-            cardElement.textContent = "";
+                    const cardElement = document.getElementById("cards");
+                    cardElement.textContent = firstWords.length === 0 ? "No pairs left!" : "";
+                    toggle = 0;
+                }
+            </script>
 
-            // Reset the toggle state
-            toggle = 0;
+        </body>
 
-            // Notify the user if all pairs are deleted
-            if (firstWords.length === 0) {
-                cardElement.textContent = "No pairs left!";
-            }
-        }
+        </html>
 
-    </script>
-
-</html>
     `;
 
     // Create a Blob with the HTML content
