@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Loan Common Record Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            border-left: 4px solid #3498db;
+            padding-left: 25px;
+        }
+
+        .form-section h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 40px auto 0;
+            font-weight: 600;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        }
+
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+
+        .preview-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .preview-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .preview-content {
+            background: #2c3e50;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .advanced-toggle {
+            background: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .advanced-toggle:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .advanced-fields {
+            display: none;
+        }
+
+        .advanced-fields.show {
+            display: block;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .form-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Direct Loan Common Record Generator</h1>
+            <p>Generate Federal Student Aid Common Record XML files with professional formatting</p>
+        </div>
+
+        <div class="form-container">
+            <form id="recordForm">
+                <!-- Student Information Section -->
+                <div class="form-section">
+                    <h2>Student Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" value="John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" value="Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ssn">Social Security Number</label>
+                            <input type="text" id="ssn" name="ssn" value="123456789" pattern="[0-9]{9}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDate">Birth Date</label>
+                            <input type="date" id="birthDate" name="birthDate" value="2000-01-01" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="form-section">
+                    <h2>Contact Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="addressLine">Address</label>
+                            <input type="text" id="addressLine" name="addressLine" value="123 CHECKERS St " required>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="FRESNO" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <input type="text" id="state" name="state" value="CA" maxlength="2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="postalCode">Postal Code</label>
+                            <input type="text" id="postalCode" name="postalCode" value="95123" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" value="1234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAddress">Email Address</label>
+                            <input type="email" id="emailAddress" name="emailAddress" value="email_student_12345@gurnick.edu" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loan Information Section -->
+                <div class="form-section">
+                    <h2>Loan Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="financialAwardAmount">Financial Award Amount</label>
+                            <input type="number" id="financialAwardAmount" name="financialAwardAmount" value="6000.00" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="disbursementAmount">Disbursement Amount</label>
+                            <input type="number" id="disbursementAmount" name="disbursementAmount" value="2000.00" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="financialAwardYear">Financial Award Year</label>
+                            <input type="text" id="financialAwardYear" name="financialAwardYear" value="2025" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="disbursementDate">Disbursement Date</label>
+                            <input type="date" id="disbursementDate" name="disbursementDate" value="2025-06-24" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="disbursementNumber">Disbursement Number</label>
+                            <input type="number" id="disbursementNumber" name="disbursementNumber" value="2" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalCount">Total Count</label>
+                            <input type="number" id="totalCount" name="totalCount" value="3" min="1" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Information Section -->
+                <div class="form-section">
+                    <h2>Academic Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="programCIPCode">Program CIP Code</label>
+                            <input type="text" id="programCIPCode" name="programCIPCode" value="51.0910" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="enrollmentSchoolCode">Enrollment School Code</label>
+                            <input type="text" id="enrollmentSchoolCode" name="enrollmentSchoolCode" value="04169800" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="academicYearBeginDate">Academic Year Begin Date</label>
+                            <input type="date" id="academicYearBeginDate" name="academicYearBeginDate" value="2025-01-06" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="academicYearEndDate">Academic Year End Date</label>
+                            <input type="date" id="academicYearEndDate" name="academicYearEndDate" value="2025-09-26" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Options -->
+                <button type="button" class="advanced-toggle" onclick="toggleAdvanced()">
+                    Show Advanced Options
+                </button>
+
+                <div class="advanced-fields" id="advancedFields">
+                    <div class="form-section">
+                        <h2>System Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="schoolRoutingID">School Routing ID</label>
+                                <input type="text" id="schoolRoutingID" name="schoolRoutingID" value="81529209" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="directLoanAttendanceCost">Direct Loan Attendance Cost</label>
+                                <input type="number" id="directLoanAttendanceCost" name="directLoanAttendanceCost" value="40728" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="originationFeePercent">Origination Fee Percent</label>
+                                <input type="number" id="originationFeePercent" name="originationFeePercent" value="1.057" step="0.001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="publishedPgmLengthWeeks">Published Program Length (Weeks)</label>
+                                <input type="number" id="publishedPgmLengthWeeks" name="publishedPgmLengthWeeks" value="72.000" step="0.001" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="generate-btn">Generate Common Record File</button>
+            </form>
+
+            <div id="statusMessage"></div>
+
+            <div class="preview-section">
+                <h3>XML Preview (First 500 characters)</h3>
+                <div class="preview-content" id="previewContent">
+                    Click "Generate Common Record File" to see preview...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let advancedVisible = false;
+
+        function toggleAdvanced() {
+            const advancedFields = document.getElementById('advancedFields');
+            const toggle = document.querySelector('.advanced-toggle');
+            
+            advancedVisible = !advancedVisible;
+            
+            if (advancedVisible) {
+                advancedFields.classList.add('show');
+                toggle.textContent = 'Hide Advanced Options';
+            } else {
+                advancedFields.classList.remove('show');
+                toggle.textContent = 'Show Advanced Options';
+            }
+        }
+
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = `status-message ${isError ? 'status-error' : 'status-success'}`;
+            statusDiv.textContent = message;
+            
+            setTimeout(() => {
+                statusDiv.textContent = '';
+                statusDiv.className = '';
+            }, 5000);
+        }
+
+        function generateTimestamp() {
+            const now = new Date();
+            return now.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, '') + now.getMilliseconds().toString().padStart(3, '0');
+        }
+
+        function generateDocumentID() {
+            const now = new Date();
+            return now.toISOString().replace('Z', '') + '81529209';
+        }
+
+        function formatDate(dateString) {
+            return dateString; // Already in YYYY-MM-DD format from HTML date input
+        }
+
+        function calculateDisbursementNetAmount(amount) {
+            const fee = Math.round(amount * 0.01057);
+            return (amount - fee).toFixed(2);
+        }
+
+        function calculateDisbursementFee(amount) {
+            return Math.round(amount * 0.01057).toFixed(2);
+        }
+
+        function generateCommonRecord(formData) {
+            const timestamp = generateTimestamp();
+            const documentID = generateDocumentID();
+            const createdDateTime = new Date().toISOString().slice(0, 19) + '.32';
+            const processDate = new Date().toISOString().slice(0, 10);
+            
+            const disbursementNetAmount = calculateDisbursementNetAmount(parseFloat(formData.disbursementAmount));
+            const disbursementFeeAmount = calculateDisbursementFee(parseFloat(formData.disbursementAmount));
+
+            return `<?xml version="1.0" encoding="UTF-8"?>
+<CommonRecord xmlns="http://www.ed.gov/FSA/COD/2024/v5.0c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ed.gov/FSA/COD/2024/v5.0c CommonRecord5.0c.xsd">
+<TransmissionData>
+<DocumentID>${documentID}</DocumentID>
+<CreatedDateTime>${createdDateTime}</CreatedDateTime>
+<Source>
+<COD>
+<RoutingID>00000001</RoutingID>
+</COD>
+</Source>
+<Destination>
+<School>
+<RoutingID>${formData.schoolRoutingID}</RoutingID>
+</School>
+</Destination>
+<Software>
+<SoftwareProvider>CODWeb</SoftwareProvider>
+<SoftwareVersion>1.0</SoftwareVersion>
+<OtherSoftwareProvider xsi:nil="true"></OtherSoftwareProvider>
+<OtherSoftwareVersion xsi:nil="true"></OtherSoftwareVersion>
+</Software>
+<FullResponseCode>F</FullResponseCode>
+</TransmissionData>
+<ReportingSchool>
+<RoutingID>${formData.schoolRoutingID}</RoutingID>
+<ReportedFinancialSummary>
+<FinancialAwardType>DLUnsubsidized</FinancialAwardType>
+<FinancialAwardYear>${formData.financialAwardYear}</FinancialAwardYear>
+<TotalCount>${formData.totalCount}</TotalCount>
+<TotalReportedAward>${formData.financialAwardAmount}</TotalReportedAward>
+<TotalReportedDisbursement>${formData.financialAwardAmount}</TotalReportedDisbursement>
+</ReportedFinancialSummary>
+<AttendedSchool>
+<RoutingID>${formData.schoolRoutingID}</RoutingID>
+<Student>
+<Index>
+<SSN>${formData.ssn}</SSN>
+<BirthDate>${formatDate(formData.birthDate)}</BirthDate>
+<LastName>${formData.lastName}</LastName>
+</Index>
+<Name>
+<FirstName>${formData.firstName}</FirstName>
+</Name>
+<Contacts>
+<PermanentAddress>
+<AddressLine>${formData.addressLine}</AddressLine>
+<City>${formData.city}</City>
+<StateProvinceCode>${formData.state}</StateProvinceCode>
+<PostalCode>${formData.postalCode}</PostalCode>
+</PermanentAddress>
+<Phone>
+<PhoneNumber>${formData.phoneNumber}</PhoneNumber>
+</Phone>
+<Email>
+<EmailAddress>${formData.emailAddress}</EmailAddress>
+</Email>
+</Contacts>
+<Citizenship>
+<CitizenshipStatusCode>1</CitizenshipStatusCode>
+</Citizenship>
+<DLLoanInformation AwardKey="1">
+<OriginationFeePercent>${formData.originationFeePercent}</OriginationFeePercent>
+<InterestRebatePercent>0.000</InterestRebatePercent>
+<DisclosureStatementPrintCode>S</DisclosureStatementPrintCode>
+<StudentLevelCode>1</StudentLevelCode>
+<FinancialAwardBeginDate>2025-03-31</FinancialAwardBeginDate>
+<FinancialAwardEndDate>2025-09-26</FinancialAwardEndDate>
+<AcademicYearBeginDate>${formatDate(formData.academicYearBeginDate)}</AcademicYearBeginDate>
+<AcademicYearEndDate>${formatDate(formData.academicYearEndDate)}</AcademicYearEndDate>
+</DLLoanInformation>
+<DLUnsubsidized>
+<AwardKey>1</AwardKey>
+<FinancialAwardYear>${formData.financialAwardYear}</FinancialAwardYear>
+<FPSTransactionNumber>2</FPSTransactionNumber>
+<FinancialAwardAmount>${formData.financialAwardAmount}</FinancialAwardAmount>
+<Note>
+<SchoolNoteMessage>${formData.ssn}UG41698001</SchoolNoteMessage>
+</Note>
+<DependencyStatusCode>D</DependencyStatusCode>
+<EntranceCounseling>true</EntranceCounseling>
+<DefaultOverpayCode>N</DefaultOverpayCode>
+<FinancialAwardNumber>1</FinancialAwardNumber>
+<FinancialAwardID>${formData.ssn}U${formData.financialAwardYear.slice(-2)}G41698001</FinancialAwardID>
+<DirectLoanAttendanceCost>${formData.directLoanAttendanceCost}</DirectLoanAttendanceCost>
+<StudentEligibilityCode>06</StudentEligibilityCode>
+<HPPAIndicator>false</HPPAIndicator>
+<AdditionalUnsubsidizedEligibilityIndicator>false</AdditionalUnsubsidizedEligibilityIndicator>
+<PreprofessionalCourseworkIndicator>false</PreprofessionalCourseworkIndicator>
+<Response>
+<ResponseCode>A</ResponseCode>
+<EntranceCounseling>true</EntranceCounseling>
+<InformedBorrowingComplete>false</InformedBorrowingComplete>
+</Response>
+<Disbursement Number="2">
+<DisbursementAmount>${formData.disbursementAmount}</DisbursementAmount>
+<DisbursementDate>${formatDate(formData.disbursementDate)}</DisbursementDate>
+<DisbursementReleaseIndicator>true</DisbursementReleaseIndicator>
+<DisbursementSequenceNumber>1</DisbursementSequenceNumber>
+<EnrollmentSchoolCode>${formData.enrollmentSchoolCode}</EnrollmentSchoolCode>
+<PaymentPeriodStartDate>2025-03-31</PaymentPeriodStartDate>
+<PaymentPeriodEndDate>2025-06-21</PaymentPeriodEndDate>
+<EnrollmentStatus>F</EnrollmentStatus>
+<ProgramCIPCode>${formData.programCIPCode}</ProgramCIPCode>
+<PublishedPgmLengthWeeks>${formData.publishedPgmLengthWeeks}</PublishedPgmLengthWeeks>
+<WeeksProgramsAcademicYear>36.000</WeeksProgramsAcademicYear>
+<SpecialPrograms>N</SpecialPrograms>
+<ProgramCredentialLevel>2</ProgramCredentialLevel>
+<ProgramCIPCodeYear>2020</ProgramCIPCodeYear>
+<DisbursementNetAmount>${disbursementNetAmount}</DisbursementNetAmount>
+<DisbursementFeeAmount>${disbursementFeeAmount}</DisbursementFeeAmount>
+<InterestRebateAmount>0.00</InterestRebateAmount>
+<Response>
+<ResponseCode>A</ResponseCode>
+<PreviousSequenceNumber>1</PreviousSequenceNumber>
+</Response>
+</Disbursement>
+</DLUnsubsidized>
+<Response>
+<ResponseCode>A</ResponseCode>
+<SubsidizedUsageLimitApplies>false</SubsidizedUsageLimitApplies>
+</Response>
+</Student>
+<Response>
+<ResponseCode>A</ResponseCode>
+</Response>
+</AttendedSchool>
+<Response>
+<ResponseFinancialSummary>
+<FinancialAwardType>DLUnsubsidized</FinancialAwardType>
+<FinancialAwardYear>${formData.financialAwardYear}</FinancialAwardYear>
+<TotalCount>3</TotalCount>
+<TotalCountAccepted>2</TotalCountAccepted>
+<TotalCountVerificationSelected>0</TotalCountVerificationSelected>
+<TotalCountSSAdministration>0</TotalCountSSAdministration>
+<TotalReportedAward>${formData.financialAwardAmount}</TotalReportedAward>
+<TotalReportedDisbursement>${formData.financialAwardAmount}</TotalReportedDisbursement>
+<TotalFinancialAwardAccepted>${formData.financialAwardAmount}</TotalFinancialAwardAccepted>
+<TotalFinancialDisbursementAccepted>4000.00</TotalFinancialDisbursementAccepted>
+<TotalFundedDisbursementAccepted>4000.00</TotalFundedDisbursementAccepted>
+</ResponseFinancialSummary>
+<ResponseCode>A</ResponseCode>
+</Response>
+</ReportingSchool>
+<Response>
+<DocumentTypeCode>WB</DocumentTypeCode>
+<DocumentStatusCode>A</DocumentStatusCode>
+<ProcessDate>${processDate}</ProcessDate>
+</Response>
+</CommonRecord>`;
+        }
+
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        document.getElementById('recordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                const xmlContent = generateCommonRecord(data);
+                const filename = `CRWB${data.financialAwardYear.slice(-2)}OP_${data.ssn}_${Date.now()}.DAT`;
+                
+                // Update preview
+                const preview = document.getElementById('previewContent');
+                preview.textContent = xmlContent.substring(0, 500) + (xmlContent.length > 500 ? '...' : '');
+                
+                // Download file
+                downloadFile(xmlContent, filename);
+                
+                showStatus(`Common Record file "${filename}" generated successfully!`);
+                
+            } catch (error) {
+                console.error('Error generating file:', error);
+                showStatus('Error generating file. Please check your inputs and try again.', true);
+            }
+        });
+
+        // Real-time preview update
+        document.getElementById('recordForm').addEventListener('input', function() {
+            try {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Only update preview if all required fields are filled
+                const requiredFields = ['firstName', 'lastName', 'ssn', 'birthDate'];
+                const allFilled = requiredFields.every(field => data[field] && data[field].trim());
+                
+                if (allFilled) {
+                    const xmlContent = generateCommonRecord(data);
+                    const preview = document.getElementById('previewContent');
+                    preview.textContent = xmlContent.substring(0, 500) + (xmlContent.length > 500 ? '...' : '');
+                }
+            } catch (error) {
+                // Silently handle errors during preview generation
+            }
+        });
+    </script>
+</body>
+</html>
